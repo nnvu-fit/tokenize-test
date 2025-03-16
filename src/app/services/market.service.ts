@@ -1,12 +1,13 @@
 import { inject, Injectable } from "@angular/core";
 import { DataService } from "./data.service";
-import { GetMarketOutput } from "../models/market/get-market-output.model";
+import { Observable } from "rxjs";
+import { MarketListItem } from "../models/market/market-list-item.model";
 
 @Injectable({ providedIn: "root" })
 export class MarketService {
   private http = inject(DataService);
 
-  public getMarkets() {
-    return this.http.get<GetMarketOutput>("api-sso/market/getmarkets");
+  public getMarkets(): Observable<MarketListItem[]> {
+    return this.http.get<MarketListItem[]>("api-sso/market/getmarkets");
   }
 }
