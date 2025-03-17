@@ -1,1 +1,18 @@
-<p>trading-view works!</p>
+<div nz-flex nzJustify="space-between">
+  <div>
+    <nz-switch (ngModelChange)="onChartTypeChanged()" nzCheckedChildren="Time" nzUnCheckedChildren="Time"> </nz-switch>
+    <nz-divider nzType="vertical"></nz-divider>
+    <nz-button-group nzSize="small">
+      @for (item of intervalOptions; track $index) {
+      <button nz-button [nzType]="selectedInterval() === item ? 'primary' : 'text'" (click)="changeInterval(item)">{{ item }}</button>
+      }
+    </nz-button-group>
+  </div>
+  <nz-button-group nzSize="small">
+    <button nz-button>Cancel</button>
+    <button nz-button nzType="primary">OK</button>
+  </nz-button-group>
+</div>
+<div [style]="{ marginTop: '10px' }">
+  <app-lightweight-charts></app-lightweight-charts>
+</div>

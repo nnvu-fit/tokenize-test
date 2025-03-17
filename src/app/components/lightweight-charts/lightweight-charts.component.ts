@@ -1,23 +1,11 @@
 import { isPlatformBrowser } from '@angular/common';
-import {
-  Component,
-  ComponentRef,
-  ElementRef,
-  HostBinding,
-  inject,
-  OnInit,
-  PLATFORM_ID,
-  ViewEncapsulation,
-} from '@angular/core';
-import { log } from 'console';
-import { createChart, IChartApi, LineSeries } from 'lightweight-charts';
+import { Component, ElementRef, HostBinding, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { createChart, IChartApi } from 'lightweight-charts';
 
 @Component({
   selector: 'app-lightweight-charts',
   standalone: true,
-  imports: [],
-  templateUrl: './lightweight-charts.component.html',
-  styleUrl: './lightweight-charts.component.scss',
+  template: ''
 })
 export class LightweightChartsComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
@@ -33,7 +21,7 @@ export class LightweightChartsComponent implements OnInit {
     // Create a chart
     this.theChart = createChart(this.ef.nativeElement, {
       height: 600,
-      autoSize: true,
+      autoSize: true
     });
   }
 
@@ -45,5 +33,4 @@ export class LightweightChartsComponent implements OnInit {
   get width() {
     return '100%';
   }
-
 }

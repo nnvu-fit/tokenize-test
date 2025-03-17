@@ -10,7 +10,7 @@ export class TraceService {
     return this.http.get('api/v3/trades?symbol=BTCUSDT&limit=100');
   }
 
-  public getHistoricalTraces() {
-    return this.http.get('api/v3/historicalTrades?symbol=BTCUSDT&limit=100');
+  public getHistoricalTraces(symbol: string, interval: string) {
+    return this.http.get(`api/v3/klines?symbol=${symbol}&interval=${interval}`);
   }
 }

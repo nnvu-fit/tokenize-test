@@ -9,11 +9,14 @@ export class DataService {
   private http = inject(HttpClient);
   private domain = 'https://api.binance.com/';
 
-  public get<T>(path: string): Observable<T> {
+  public get<T>(path: string, skipError: boolean = false): Observable<T> {
     return this.http.get<T>(this.domain + path).pipe(
       map((response: T) => response),
       catchError((error) => {
         console.error('Error:', error);
+        if (skipError) {
+          return new Observable<T>();
+        }
         throw error;
       })
     );
