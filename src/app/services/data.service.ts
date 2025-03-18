@@ -7,7 +7,7 @@ import { DataResponse } from '../models/data-response.model';
 @Injectable({ providedIn: 'root' })
 export class DataService {
   private http = inject(HttpClient);
-  private domain = 'https://api.binance.com/';
+  private domain = '';
 
   public get<T>(path: string, skipError: boolean = false): Observable<T> {
     return this.http.get<T>(this.domain + path).pipe(

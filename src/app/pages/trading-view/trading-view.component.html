@@ -4,7 +4,9 @@
     <nz-divider nzType="vertical"></nz-divider>
     <nz-button-group nzSize="small">
       @for (item of intervalOptions; track $index) {
-      <button nz-button [nzType]="selectedInterval() === item ? 'primary' : 'text'" (click)="changeInterval(item)">{{ item }}</button>
+      <a nz-button [nzType]="selectedInterval() === item ? 'primary' : 'text'" routerLink="/home" [queryParams]="{ interval: item }">
+        {{ item }}
+      </a>
       }
     </nz-button-group>
   </div>
@@ -14,5 +16,5 @@
   </nz-button-group>
 </div>
 <div [style]="{ marginTop: '10px' }">
-  <app-lightweight-charts></app-lightweight-charts>
+    <app-lightweight-charts *isBrowserRender="true"></app-lightweight-charts>
 </div>

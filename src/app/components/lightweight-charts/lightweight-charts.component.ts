@@ -1,5 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, ElementRef, HostBinding, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, ElementRef, HostBinding, inject, OnInit } from '@angular/core';
 import { createChart, IChartApi } from 'lightweight-charts';
 
 @Component({
@@ -8,16 +7,11 @@ import { createChart, IChartApi } from 'lightweight-charts';
   template: ''
 })
 export class LightweightChartsComponent implements OnInit {
-  private platformId = inject(PLATFORM_ID);
   private ef = inject(ElementRef);
 
   public theChart!: IChartApi;
 
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
     // Create a chart
     this.theChart = createChart(this.ef.nativeElement, {
       height: 600,
