@@ -10,11 +10,10 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { IsBrowserRenderDirective } from '../../directives/is-browser-render.directive';
 
 @Component({
-  selector: 'app-trading-view',
-  standalone: true,
-  imports: [RouterLink, IsBrowserRenderDirective, LightweightChartsComponent, NzFlexModule, NzButtonModule, NzSwitchModule, NzDividerModule],
-  templateUrl: './trading-view.component.html',
-  styleUrl: './trading-view.component.scss',
+    selector: 'app-trading-view',
+    imports: [RouterLink, IsBrowserRenderDirective, LightweightChartsComponent, NzFlexModule, NzButtonModule, NzSwitchModule, NzDividerModule],
+    templateUrl: './trading-view.component.html',
+    styleUrl: './trading-view.component.scss'
 })
 export class TradingViewComponent implements OnInit, AfterViewInit {
   private readonly traceService = inject(TradeService);

@@ -2,8 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Directive, inject, input, OnInit, PLATFORM_ID, TemplateRef, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[isBrowserRender]',
-  standalone: true
+  selector: '[isBrowserRender]'
 })
 export class IsBrowserRenderDirective implements OnInit {
   public readonly isBrowserRender = input<boolean>(true);

@@ -3,7 +3,6 @@ import { createChart, IChartApi } from 'lightweight-charts';
 
 @Component({
   selector: 'app-lightweight-charts',
-  standalone: true,
   template: ''
 })
 export class LightweightChartsComponent implements OnInit {
