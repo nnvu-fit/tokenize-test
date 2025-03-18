@@ -37,6 +37,21 @@
           }
         }
       }
+    },
+    {
+      "label": "Terminate All Tasks",
+      "type": "shell",
+      "command": "echo ${input:terminateAll}",
+      "problemMatcher": [],
+      "group": { "kind": "build", "isDefault": true }
     }
-  ]
+  ],
+  "inputs": [
+    {
+      "id": "terminateAll",
+      "type": "command",
+      "command": "workbench.action.tasks.terminate",
+      "args": "terminateAll"
+    }
+  ],
 }

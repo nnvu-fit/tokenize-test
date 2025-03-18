@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
-import { TraceService } from '../../services/trace.service';
+import { TradeService } from '../../services/trade.service';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
@@ -17,7 +17,7 @@ import { IsBrowserRenderDirective } from '../../directives/is-browser-render.dir
   styleUrl: './trading-view.component.scss',
 })
 export class TradingViewComponent implements OnInit, AfterViewInit {
-  private readonly traceService = inject(TraceService);
+  private readonly traceService = inject(TradeService);
   private readonly activatedRoute = inject(ActivatedRoute);
 
   public chartType: WritableSignal<'candlestick' | 'line'> = signal('candlestick');
