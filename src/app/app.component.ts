@@ -1,5 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { DataService } from './services/data.service';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -8,14 +7,6 @@ import { RouterOutlet } from '@angular/router';
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-  private readonly http = inject(DataService);
-
+export class AppComponent {
   title = 'tokenize-test';
-
-  ngOnInit() {
-    this.http.get('api/v3/ping', true).subscribe((data) => {
-      console.log(data);
-    });
-  }
 }

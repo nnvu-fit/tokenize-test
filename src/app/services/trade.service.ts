@@ -11,6 +11,6 @@ export class TradeService {
   }
 
   public getHistoricalTraces(symbol: string, interval: string) {
-    return this.http.get(`klines?symbol=${symbol}&interval=${interval}`);
+    return this.http.get(`trades/klines?symbol=${symbol}&interval=${interval}`);
   }
 }
