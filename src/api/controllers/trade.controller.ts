@@ -1,9 +1,10 @@
 import express from 'express';
+import { axiosService } from '../services/axios.service';
+import { KlineListItem } from '../../models/kline-list-item.model';
 
 export const tradeController = express.Router();
 
 tradeController.get('/klines', (req, res) => {
-
   const symbol = req.query['symbol'];
   const interval = req.query['interval'];
   const startTime = req.query['startTime'];
@@ -21,20 +22,36 @@ tradeController.get('/klines', (req, res) => {
   // });
   // res.json(klines);
 
-  res.json([
-    [
-      1499040000000,      // Open time
-      "0.01634790",       // Open
-      "0.80000000",       // High
-      "0.01575800",       // Low
-      "0.01577100",       // Close
-      "148976.11427815",  // Volume
-      1499644799999,      // Close time
-      "2434.19055334",    // Quote asset volume
-      308,                // Number of trades
-      "1756.87402397",    // Taker buy base asset volume
-      "28.46694368",      // Taker buy quote asset volume
-      "17928899.62484339" // Ignore
-    ]
-  ])
+  axiosService
+    .get('/api/v3/klines', {
+      params: {
+        symbol: symbol,
+        interval: interval,
+        startTime: startTime,
+        endTime: endTime,
+        limit: limit
+      }
+    })
+    .then((response) => {
+      const data = response.data.map((item: any[]) => {
+        return <KlineListItem>{
+          klineOpenTime: item[0],
+          open: item[1],
+          high: item[2],
+          low: item[3],
+          close: item[4],
+          volume: item[5],
+          klineCloseTime: item[6],
+          quoteAssetVolume: item[7],
+          numberOfTrades: item[8],
+          takerBuyBaseAssetVolume: item[9],
+          takerBuyQuoteAssetVolume: item[10],
+          ignore: item[11]
+        };
+      });
+      res.json(data);
+    })
+    .catch((error) => {
+      res.status(error.response.status).json(error.response.data);
+    });
 });

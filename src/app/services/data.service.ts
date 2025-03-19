@@ -1,15 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
-import { catchError, map, Observable, tap } from 'rxjs';
-import { isPlatformBrowser } from '@angular/common';
+import { catchError, map, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
   private readonly http = inject(HttpClient);
-  private platformId = inject(PLATFORM_ID);
 
-  private domain = isPlatformBrowser(this.platformId) ? '/api/' : 'https://api.binance.com/api/v3/';
+  private domain = '/api/';
 
   public get<T>(path: string, skipError: boolean = false): Observable<T> {
     return this.http.get<T>(this.domain + path).pipe(

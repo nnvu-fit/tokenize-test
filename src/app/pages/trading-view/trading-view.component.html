@@ -1,6 +1,6 @@
 <div nz-flex nzJustify="space-between">
   <div>
-    <nz-switch (ngModelChange)="onChartTypeChanged()" nzCheckedChildren="Time" nzUnCheckedChildren="Time"> </nz-switch>
+    <nz-switch [ngModel]="this.chartType() == 'line'" (ngModelChange)="onChartTypeChanged()" nzCheckedChildren="Time" nzUnCheckedChildren="Time"> </nz-switch>
     <nz-divider nzType="vertical"></nz-divider>
     <nz-button-group nzSize="small">
       @for (item of intervalOptions; track $index) {

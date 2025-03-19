@@ -1,40 +1,95 @@
-import { AfterViewInit, Component, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
-import { TradeService } from '../../services/trade.service';
+import { AfterViewInit, Component, computed, effect, inject, OnInit, signal, viewChild, WritableSignal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 import { LightweightChartsComponent } from '../../components/lightweight-charts/lightweight-charts.component';
-import { ActivatedRoute, RouterLink } from '@angular/router';
 import { IsBrowserRenderDirective } from '../../directives/is-browser-render.directive';
 
+import { TradeService } from '../../services/trade.service';
+import { KlineListItem } from '../../../models/kline-list-item.model';
+import { CandlestickSeries, IChartApi, ISeriesApi, LineSeries } from 'lightweight-charts';
+import _ from 'lodash';
+
 @Component({
-    selector: 'app-trading-view',
-    imports: [RouterLink, IsBrowserRenderDirective, LightweightChartsComponent, NzFlexModule, NzButtonModule, NzSwitchModule, NzDividerModule],
-    templateUrl: './trading-view.component.html',
-    styleUrl: './trading-view.component.scss'
+  selector: 'app-trading-view',
+  imports: [
+    FormsModule,
+    RouterLink,
+    IsBrowserRenderDirective,
+    LightweightChartsComponent,
+    NzFlexModule,
+    NzButtonModule,
+    NzSwitchModule,
+    NzDividerModule
+  ],
+  templateUrl: './trading-view.component.html',
+  styleUrl: './trading-view.component.scss'
 })
 export class TradingViewComponent implements OnInit, AfterViewInit {
   private readonly traceService = inject(TradeService);
   private readonly activatedRoute = inject(ActivatedRoute);
 
+  public lighweightChart = viewChild(LightweightChartsComponent);
+
   public chartType: WritableSignal<'candlestick' | 'line'> = signal('candlestick');
-  public intervalOptions = ['1s', '1m', '5m', '15m', '30m', '1h', '4h', '1d', '1w', '1M'];
+  public intervalOptions = ['1m', '5m', '15m', '30m', '1h', '4h', '1d', '1w', '1M'];
 
   public selectedSymbol = 'BCHBTC';
   public selectedInterval: WritableSignal<string> = signal('1m');
+  public data = signal<KlineListItem[]>([]);
+
+  private series = signal<ISeriesApi<any> | null>(null);
 
   constructor() {
-    // effect to fetch historical traces on symbol or interval change
-    effect((onCleanUp) => {
-      console.log('interval', this.selectedInterval());
-      
-      const subs = this.traceService.getHistoricalTraces(this.selectedSymbol, this.selectedInterval()).subscribe((data) => {
-        // console.log(data);
+    effect((onCleanup) => {
+      const sub = this.traceService.getHistoricalTraces(this.selectedSymbol, this.selectedInterval()).subscribe((data) => {
+        console.log(data);
+
+        this.data.update(() => data);
       });
 
-      onCleanUp(() => subs.unsubscribe());
+      onCleanup(() => {
+        sub.unsubscribe();
+      });
+    });
+
+    effect((onCleanup) => {
+      const series = this.series();
+      if (!series) {
+        return;
+      }
+
+      if (this.chartType() === 'candlestick') {
+        series.setData(
+          this.data().map((item) => {
+            return {
+              time: item.klineOpenTime,
+              open: _.toNumber(item.open),
+              high: _.toNumber(item.high),
+              low: _.toNumber(item.low),
+              close: _.toNumber(item.close)
+            };
+          })
+        );
+      } else {
+        series.setData(
+          this.data().map((item) => {
+            return {
+              time: item.klineOpenTime,
+              value: _.toNumber(item.close)
+            };
+          })
+        );
+      }
+
+      onCleanup(() => {
+        series.setData([]);
+      });
     });
   }
 
@@ -42,8 +97,7 @@ export class TradingViewComponent implements OnInit, AfterViewInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params['interval']) {
         const interval = params['interval'];
-        if (!this.intervalOptions.includes(interval)) {
-        } else {
+        if (this.intervalOptions.includes(interval)) {
           this.selectedInterval.update(() => interval);
         }
       }
@@ -53,9 +107,32 @@ export class TradingViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    const chart = this.lighweightChart()?.theChart;
+    if (!chart) {
+      return;
+    }
+
+    // chart.addSeries(this.data());
+    this.addChartSeries(chart);
+  }
 
   public onChartTypeChanged() {
     this.chartType.update((type) => (type === 'candlestick' ? 'line' : 'candlestick'));
+
+    const chart = this.lighweightChart()?.theChart;
+    if (!chart) {
+      return;
+    }
+
+    if (this.series()) {
+      chart.removeSeries(this.series()!);
+    }
+    this.addChartSeries(chart);
+  }
+
+  private addChartSeries(chart: IChartApi) {
+    const series = this.chartType() === 'candlestick' ? chart.addSeries(CandlestickSeries) : chart.addSeries(LineSeries);
+    this.series.update(() => series);
   }
 }
