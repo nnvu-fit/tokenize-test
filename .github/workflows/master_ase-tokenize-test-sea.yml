@@ -60,5 +60,7 @@ jobs:
           app-name: 'ase-tokenize-test-sea'
           slot-name: 'Production'
           package: ./dist/tokenize-test
+          clean: true
+          startup-command: 'pm2 serve /home/site/wwwroot -no-daemon-spa'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FC5AC0327E50477B93896BA79EFACC17 }}
           
