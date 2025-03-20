@@ -48,8 +48,6 @@ export class TradingViewComponent implements OnInit, AfterViewInit {
   constructor() {
     effect((onCleanup) => {
       const sub = this.traceService.getHistoricalTraces(this.selectedSymbol, this.selectedInterval()).subscribe((data) => {
-        console.log(data);
-
         this.data.update(() => data);
       });
 
