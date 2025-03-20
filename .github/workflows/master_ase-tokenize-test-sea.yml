@@ -61,6 +61,6 @@ jobs:
           slot-name: 'Production'
           package: ./dist/tokenize-test
           clean: true
-          startup-command: 'pm2 serve /home/site/wwwroot -no-daemon-spa'
+          startup-command: 'pm2 serve /home/site/wwwroot --spa --no-daemon'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FC5AC0327E50477B93896BA79EFACC17 }}
           
